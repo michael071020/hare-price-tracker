@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "HARE Price Tracker",
+    "version": "0.1",
+    "description": "Track and compare prices of Japanese fashion brands like HARE.",
+    "permissions": ["scripting", "activeTab", "storage"],
+    "host_permissions": ["https://www.dot-st.tw/*"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+      }
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://www.dot-st.tw/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
+  
