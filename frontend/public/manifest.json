@@ -18,6 +18,7 @@
         "matches": ["https://www.dot-st.tw/*"],
         "js": ["content.js"]
       }
-    ]
+    ],
+    "options_page": "options.html"
   }
   

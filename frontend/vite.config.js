@@ -8,7 +8,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: resolve(__dirname, 'popup.html'),
-        content: resolve(__dirname, 'src/content.js')
+        content: resolve(__dirname, 'src/content.js'),
+        options: resolve(__dirname, 'options.html')
       },
       output: {
         entryFileNames: assetInfo => {
