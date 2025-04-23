@@ -76,7 +76,7 @@ function App() {
             suggestPrice: data.productSuggestPrice,
             idTW: data.productIdTW,
             options: data.productOptions,
-            url: window.location.href
+            url: `https://www.dot-st.tw/SalePage/Index/${data.productIdTW}`
           }
         };
     
