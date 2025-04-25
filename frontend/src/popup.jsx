@@ -11,6 +11,8 @@ function App() {
     productOptions: []
   });
 
+  const [isTracked, setIsTracked] = useState(false);
+
   useEffect(() => {
     chrome.storage.local.get([
       'productTitle',
@@ -30,6 +32,60 @@ function App() {
       });
     });
   }, []);
+
+  // 將台灣商品加入追蹤
+  // 目前邏輯為按下追蹤後，將content.js存進local的資料再存進結構化資料內
+  useEffect(() => {
+    chrome.storage.local.get([
+      'productTitle',
+      'productSuggestPrice',
+      'productPrice',
+      'productIdTW',
+      'productId',
+      'productOptions',
+      'trackedProducts'
+    ], (result) => {
+      const id = result.productId || '';
+      const tracked = result.trackedProducts || [];
+      const exists = tracked.some(item => item.productId === id);
+  
+      setIsTracked(exists);
+      setData({
+        productTitle: result.productTitle || '',
+        productSuggestPrice: result.productSuggestPrice || '',
+        productPrice: result.productPrice || '',
+        productIdTW: result.productIdTW || '',
+        productId: id,
+        productOptions: result.productOptions || []
+      });
+    });
+  }, []);
+  
+  const handleTrack = () => {
+      chrome.storage.local.get(['trackedProducts'], (res) => {
+        const currentList = res.trackedProducts || [];
+        if (currentList.some(item => item.productId === data.productId)) {
+          return; // 已追蹤就不加
+        }
+    
+        const newItem = {
+          productId: data.productId,
+          tw: {
+            title: data.productTitle,
+            price: data.productPrice,
+            suggestPrice: data.productSuggestPrice,
+            idTW: data.productIdTW,
+            options: data.productOptions,
+            url: `https://www.dot-st.tw/SalePage/Index/${data.productIdTW}`
+          }
+        };
+    
+        const newList = [...currentList, newItem];
+        chrome.storage.local.set({ trackedProducts: newList }, () => {
+          setIsTracked(true);
+        });
+      });
+    };
 
   return (
     <div style={{ padding: '1rem', fontFamily: 'sans-serif', fontSize: '14px' }}>
@@ -51,6 +107,14 @@ function App() {
           </li>
         ))}
       </ul>
+        <hr style={{ margin: '1rem 0' }} />
+        {isTracked ? (
+          <p style={{ color: 'green', fontWeight: 'bold' }}>此商品已在追蹤清單中</p>
+        ) : (
+          <button onClick={handleTrack} style={{ padding: '0.5rem 1rem', fontSize: '14px', cursor: 'pointer' }}>
+            ➕ 加入追蹤清單
+          </button>
+        )}
     </div>
   );
 }
