@@ -1,8 +1,9 @@
+
+/* Get product details (only tw for now) */
 const productTitle = document.getElementsByClassName('salepage-title')[0]?.innerText ?? '';
 const productSuggestPrice = document.getElementsByClassName('salepage-suggestprice')[0]?.innerText ?? '';
 const productPrice = document.getElementsByClassName('salepage-price')[0]?.innerText ?? '';
 const productIdTW = document.getElementsByClassName('salepage-feature-detail')[0]?.innerText ?? '';
-
 
 // 商品編號 (productId)
 const lisProductId = document.querySelectorAll('.salepage-short-description li');
@@ -15,10 +16,10 @@ for (let li of lisProductId) {
 }
 if (!productId) {
   const match = productTitle.match(/\d{6}/);
-  productCode = match ? match[0] : '';
+  productId = match ? match[0] : '';
 }
 
-//庫存狀態
+// stock for different size/color
 const lisOptionElements = document.querySelectorAll('.sku-ul li');
 const productOptions = Array.from(lisOptionElements).map(li => {
   const a = li.querySelector('a');
@@ -27,18 +28,22 @@ const productOptions = Array.from(lisOptionElements).map(li => {
   return { productOption, inStock };
 });
 
-chrome.storage.local.set({ 
-    productTitle: productTitle, 
-    productSuggestPrice: productSuggestPrice,
-    productPrice: productPrice,
-    productIdTW: productIdTW,
-    productId: productId,
-    productOptions: productOptions
-}, () => {
-  console.log('商品標題：', productTitle);
-  console.log('商品建議售價：', productSuggestPrice);
-  console.log('商品售價：', productPrice);
-  console.log('商品台灣編號：', productIdTW);
-  console.log('商品編號：', productId);
-  console.log('庫存狀態：', productOptions);
+
+const currentProduct = {
+  productId: productId,
+  tw: {
+    isStock: true,
+    title: productTitle,
+    price: productPrice,
+    suggestPrice: productSuggestPrice,
+    idTW: productIdTW,
+    options: productOptions,
+    url: `https://www.dot-st.tw/SalePage/Index/${productIdTW}`
+  },
+  jp: { isStock: false },
+  zozo: { isStock: false }
+};
+
+chrome.storage.local.set({ currentProduct }, () => {
+  console.log('已儲存商品資料至 currentProduct', currentProduct);
 });
