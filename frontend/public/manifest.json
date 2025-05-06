@@ -4,7 +4,7 @@
     "version": "0.1",
     "description": "Track and compare prices of Japanese fashion brands like HARE.",
     "permissions": ["scripting", "activeTab", "storage"],
-    "host_permissions": ["https://www.dot-st.tw/*"],
+    "host_permissions": ["https://www.dot-st.tw/*", "https://www.dot-st.com/*", "https://zozo.jp/*"],
     "action": {
       "default_popup": "popup.html",
       "default_icon": {
@@ -15,7 +15,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["https://www.dot-st.tw/*"],
+        "matches": ["https://www.dot-st.tw/*", "https://www.dot-st.com/*", "https://zozo.jp/*"],
         "js": ["content.js"]
       }
     ],
